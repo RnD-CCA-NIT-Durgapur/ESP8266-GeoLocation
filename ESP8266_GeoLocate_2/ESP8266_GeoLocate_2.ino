@@ -16,19 +16,14 @@ http://m0xpd.blogspot.com/2016/08/esp8266-geolocation.html
 #include <ArduinoJson.h>
 #include "ESP8266WiFi.h"
 
-char myssid[] = <ssid>;          // your network SSID (name) 
-char mypass[] = <pass>;          // your network password
+char myssid[] = "Ankita";          // your network SSID (name) 
+char mypass[] = "00000000";          // your network password
 
 
 //Credentials for Google GeoLocation API...
-//const char* Host = "www.googleapis.com";
-//String thisPage = "/geolocation/v1/geolocate?key=";
-//String key = <API_key>;
-
-//Credentials for Mozilla GeoLocation API...
-//const char* Host = "location.services.mozilla.com";
-//String thisPage = "/v1/geolocate?key=";
-//String key = <API_Key>;
+const char* Host = "www.googleapis.com";
+String thisPage = "/geolocation/v1/geolocate?key=";
+String key = "AIzaSyCIQ1gIv-UtmEEBTX7WgmzqptbEGSbc21E";
 
 int status = WL_IDLE_STATUS;
 String jsonString = "{\n";
@@ -46,6 +41,18 @@ void setup() {
   WiFi.disconnect();
   delay(100);
   Serial.println("Setup done");
+
+  
+    // We start by connecting to a WiFi network
+  Serial.print("Connecting to ");
+  Serial.println(myssid);
+  WiFi.begin(myssid, mypass);
+  
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+    Serial.println(".");  
 }
 
 void loop() {
@@ -65,10 +72,9 @@ void loop() {
   if(more_text){
     // Print out the formatted json...
     Serial.println("{");
-    Serial.println("\"homeMobileCountryCode\": 234,");  // this is a real UK MCC
-    Serial.println("\"homeMobileNetworkCode\": 27,");   // and a real UK MNC
-    Serial.println("\"radioType\": \"gsm\",");          // for gsm
-    Serial.println("\"carrier\": \"Vodafone\",");       // associated with Vodafone 
+    Serial.println("\"homeMobileCountryCode\": 405,");  // this is a real UK MCC
+    Serial.println("\"homeMobileNetworkCode\": 840,");   // and a real UK MNC
+    Serial.println("\"radioType\": Jio\",");       // associated with Vodafone 
     //Serial.println("\"cellTowers\": [");                // I'm not reporting any cell towers      
     //Serial.println("],");      
     Serial.println("\"wifiAccessPoints\": [");
@@ -126,16 +132,7 @@ jsonString +="\"wifiAccessPoints\": [\n";
  Serial.println("");
 
  WiFiClientSecure client;
-  // We start by connecting to a WiFi network
-  Serial.print("Connecting to ");
-  Serial.println(myssid);
-  WiFi.begin(myssid, mypass);
-  
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
-  }
-    Serial.println(".");  
+
 
   //Connect to the client and make the api call
   Serial.print("Requesting URL: ");
@@ -183,5 +180,3 @@ jsonString +="\"wifiAccessPoints\": [\n";
   }
   
 }
-
-
